@@ -13,11 +13,15 @@
   },
   "dependencies": {
     "@vendure/asset-server-plugin": "3.5.1",
+    "@vendure/common": "^3.5.1",
     "@vendure/core": "3.5.1",
+    "@vendure/create": "^3.5.1",
     "@vendure/dashboard": "3.5.1",
     "@vendure/email-plugin": "3.5.1",
     "@vendure/graphiql-plugin": "3.5.1",
+    "@vendure/job-queue-plugin": "^3.5.1",
     "better-sqlite3": "12.4.1",
+    "bullmq": "^5.58.2",
     "dotenv": "17.2.3",
     "pg": "^8.16.3"
   },

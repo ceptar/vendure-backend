@@ -4,23 +4,29 @@ import {
     DefaultSchedulerPlugin,
     DefaultSearchPlugin,
     VendureConfig,
+    DefaultLogger,
+    LogLevel,
 } from '@vendure/core';
 import { defaultEmailHandlers, EmailPlugin, FileBasedTemplateLoader } from '@vendure/email-plugin';
 import { AssetServerPlugin } from '@vendure/asset-server-plugin';
+import { BullMQJobQueuePlugin } from "@vendure/job-queue-plugin/package/bullmq";
 import { DashboardPlugin } from '@vendure/dashboard/plugin';
 import { GraphiqlPlugin } from '@vendure/graphiql-plugin';
 import 'dotenv/config';
 import path from 'path';
+import { CmsPlugin } from './plugins/cms/cms.plugin';
+
 
 const IS_DEV = process.env.APP_ENV === 'dev';
-const serverPort = +process.env.PORT || 3000;
+const serverPort = +process.env.PORT || 8000;
 
 export const config: VendureConfig = {
+      logger: new DefaultLogger({ level: LogLevel.Debug }),
     apiOptions: {
         port: serverPort,
         adminApiPath: 'admin-api',
         shopApiPath: 'shop-api',
-        trustProxy: IS_DEV ? false : 1,
+        // trustProxy: 'loopback',
         // The following options are useful in development mode,
         // but are best turned off for production for security
         // reasons.
@@ -39,26 +45,27 @@ export const config: VendureConfig = {
             secret: process.env.COOKIE_SECRET,
         },
     },
-    dbConnectionOptions: process.env.DATABASE_URL
-        ? {
+    dbConnectionOptions: 
+    // process.env.DATABASE_URL ? 
+    {
             type: 'postgres',
             url: process.env.DATABASE_URL,
-            synchronize: false,
+            synchronize: true,
             migrations: [path.join(__dirname, './migrations/*.+(js|ts)')],
-            logging: false,
-            ssl: {
-                rejectUnauthorized: false,
-            },
-        }
-        : {
-            type: 'better-sqlite3',
-            // See the README.md "Migrations" section for an explanation of
-            // the `synchronize` and `migrations` options.
-            synchronize: false,
-            migrations: [path.join(__dirname, './migrations/*.+(js|ts)')],
-            logging: false,
-            database: path.join(__dirname, '../vendure.sqlite'),
+            logging: true,
+            // ssl: {
+            //     rejectUnauthorized: false,
+            // },
         },
+        // : {
+        //     type: 'better-sqlite3',
+        //     // See the README.md "Migrations" section for an explanation of
+        //     // the `synchronize` and `migrations` options.
+        //     synchronize: true,
+        //     migrations: [path.join(__dirname, './migrations/*.+(js|ts)')],
+        //     logging: true,
+        //     database: path.join(__dirname, '../vendure.sqlite'),
+        // },
     paymentOptions: {
         paymentMethodHandlers: [dummyPaymentHandler],
     },
@@ -67,16 +74,19 @@ export const config: VendureConfig = {
     customFields: {},
     plugins: [
         GraphiqlPlugin.init(),
-        AssetServerPlugin.init({
-            route: 'assets',
-            assetUploadDir: path.join(__dirname, '../static/assets'),
-            // For local dev, the correct value for assetUrlPrefix should
-            // be guessed correctly, but for production it will usually need
-            // to be set manually to match your production url.
-            assetUrlPrefix: IS_DEV ? undefined : 'https://www.my-shop.com/assets/',
-        }),
-        DefaultSchedulerPlugin.init(),
-        DefaultJobQueuePlugin.init({ useDatabaseForBuffer: true }),
+      AssetServerPlugin.init({
+        route: "assets",
+        assetUploadDir: path.join(__dirname, "../static/assets"),
+        assetUrlPrefix: process.env.ASSET_URL_PREFIX || "/assets/",
+      }),
+        DefaultSchedulerPlugin.init({}),
+      BullMQJobQueuePlugin.init({
+        connection: {
+          host: process.env.REDIS_HOST || "localhost",
+          port: +(process.env.REDIS_PORT || 6379),
+          maxRetriesPerRequest: null,
+        },
+      }),
         DefaultSearchPlugin.init({ bufferUpdates: false, indexStockStatus: true }),
         EmailPlugin.init({
             devMode: true,
@@ -93,6 +103,12 @@ export const config: VendureConfig = {
                 changeEmailAddressUrl: 'http://localhost:8080/verify-email-address-change'
             },
         }),
+            CmsPlugin.init({
+      sanityApiKey: process.env.SANITY_API_KEY,
+      sanityProjectId: process.env.SANITY_PROJECT_ID,
+      sanityDataset: process.env.SANITY_DATASET || 'production',
+      sanityOrigin: process.env.SANITY_ORIGIN,
+    }),
         DashboardPlugin.init({
             route: 'dashboard',
             appDir: IS_DEV

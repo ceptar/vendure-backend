@@ -1,0 +1,22 @@
+##  docker run --name vendure-postgres -p 5432:5432 -e POSTGRES_PASSWORD=redubash1a3466 -e POSTGRES_USER=vendure -e POSTGRES_DB=vendure -d postgres 
+
+# postgresql://vendure:redubash1a3466@localhost:5432/vendure
+# postgresql://vendure:vendure@localhost:5432/vendure
+
+# pg_dump "postgresql://vendure:redubash1a3466@localhost:5432/vendure" "--no-owner" "--no-privileges" "--no-password" "--no-tablespaces" > dumpfile
+
+#  reset pg db in docker
+##  docker exec -it vendure-postgres dropdb -U vendure vendure
+##  docker exec -it vendure-postgres createdb -U vendure vendure
+
+#  redis
+## docker run --name vendure-redis -p 127.0.0.1:6379:6379 -d redis
+
+#  analyse port windows
+##  Get-Process -Id (Get-NetTCPConnection -LocalPort 3000).OwningProcess
+
+# npx vendure migrate --vendure-config /home/ceptar/sanityvendure/vendure/__vendure-examples/examples/sanity-cms-integration/src/vendure-config.ts
+
+# vite beenden mit "q + enter"
+
+# $ pgloader sqlite:///home/ceptar/sanityvendure/vendure/vendure-backend/vendure.sqlite postgresql://vendure:vendure@localhost:5432/vendure
