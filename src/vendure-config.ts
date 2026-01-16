@@ -16,6 +16,7 @@ import 'dotenv/config';
 import path from 'path';
 import { CmsPlugin } from './plugins/cms/cms.plugin';
 
+const VENDURE_BASE_URL = process.env.VENDURE_BASE_URL || "http://localhost:8000";
 
 const IS_DEV = process.env.APP_ENV === 'dev';
 const serverPort = +process.env.PORT || 8000;
@@ -23,20 +24,13 @@ const serverPort = +process.env.PORT || 8000;
 export const config: VendureConfig = {
       logger: new DefaultLogger({ level: LogLevel.Debug }),
     apiOptions: {
-        port: serverPort,
-        adminApiPath: 'admin-api',
-        shopApiPath: 'shop-api',
-        // trustProxy: 'loopback',
-        // The following options are useful in development mode,
-        // but are best turned off for production for security
-        // reasons.
-        ...(IS_DEV ? {
-            adminApiDebug: true,
-            shopApiDebug: true,
-        } : {}),
+        port: process.env.PORT ? +process.env.PORT : 8000,
+        trustProxy: 'loopback'
     },
     authOptions: {
         tokenMethod: ['bearer', 'cookie'],
+                requireVerification: true,
+
         superadminCredentials: {
             identifier: process.env.SUPERADMIN_USERNAME,
             password: process.env.SUPERADMIN_PASSWORD,
@@ -74,11 +68,11 @@ export const config: VendureConfig = {
     customFields: {},
     plugins: [
         GraphiqlPlugin.init(),
-      AssetServerPlugin.init({
-        route: "assets",
-        assetUploadDir: path.join(__dirname, "../static/assets"),
-        assetUrlPrefix: process.env.ASSET_URL_PREFIX || "/assets/",
-      }),
+        AssetServerPlugin.init({
+            route: "assets",
+            assetUploadDir: path.join(__dirname, "../static/assets"),
+            assetUrlPrefix: `${VENDURE_BASE_URL}/assets/`,
+        }),
         DefaultSchedulerPlugin.init({}),
       BullMQJobQueuePlugin.init({
         connection: {
