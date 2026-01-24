@@ -1,11 +1,11 @@
 import {
     dummyPaymentHandler,
-    DefaultJobQueuePlugin,
+    // DefaultJobQueuePlugin,
     DefaultSchedulerPlugin,
     DefaultSearchPlugin,
     VendureConfig,
-    DefaultLogger,
-    LogLevel,
+    // DefaultLogger,
+    // LogLevel,
 } from '@vendure/core';
 import { defaultEmailHandlers, EmailPlugin, FileBasedTemplateLoader } from '@vendure/email-plugin';
 import { AssetServerPlugin } from '@vendure/asset-server-plugin';
@@ -19,13 +19,13 @@ import { CmsPlugin } from './plugins/cms/cms.plugin';
 const VENDURE_BASE_URL = process.env.VENDURE_BASE_URL || "http://localhost:8000";
 
 const IS_DEV = process.env.APP_ENV === 'dev';
-const serverPort = +process.env.PORT || 8000;
+// const serverPort = +process.env.PORT || 8000;
 
 export const config: VendureConfig = {
-      logger: new DefaultLogger({ level: LogLevel.Debug }),
+    //   logger: new DefaultLogger({ level: LogLevel.Debug }),
     apiOptions: {
         port: process.env.PORT ? +process.env.PORT : 8000,
-        trustProxy: 'loopback'
+    //    trustProxy: 'loopback',
     },
     authOptions: {
         tokenMethod: ['bearer', 'cookie'],
@@ -46,7 +46,7 @@ export const config: VendureConfig = {
             url: process.env.DATABASE_URL,
             synchronize: true,
             migrations: [path.join(__dirname, './migrations/*.+(js|ts)')],
-            logging: true,
+            logging: false,
             // ssl: {
             //     rejectUnauthorized: false,
             // },
