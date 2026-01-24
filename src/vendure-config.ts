@@ -16,7 +16,7 @@ import 'dotenv/config';
 import path from 'path';
 import { CmsPlugin } from './plugins/cms/cms.plugin';
 
-const VENDURE_BASE_URL = process.env.VENDURE_BASE_URL || "http://localhost:8000";
+const VENDURE_BASE_URL = process.env.VENDURE_BASE_URL || "http://localhost:8889";
 
 const IS_DEV = process.env.APP_ENV === 'dev';
 // const serverPort = +process.env.PORT || 8000;
@@ -24,7 +24,7 @@ const IS_DEV = process.env.APP_ENV === 'dev';
 export const config: VendureConfig = {
     //   logger: new DefaultLogger({ level: LogLevel.Debug }),
     apiOptions: {
-        port: process.env.PORT ? +process.env.PORT : 8000,
+        port: process.env.PORT ? +process.env.PORT : 8889,
     //    trustProxy: 'loopback',
     },
     authOptions: {
