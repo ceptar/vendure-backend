@@ -25,6 +25,12 @@ export const config: VendureConfig = {
     //   logger: new DefaultLogger({ level: LogLevel.Debug }),
     apiOptions: {
         port: process.env.PORT ? +process.env.PORT : 8889,
+        hostname: '0.0.0.0',
+            cors: {
+      origin: '*',
+      methods: ['GET', 'POST', 'OPTIONS'],
+      allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept'],
+    },
     //    trustProxy: 'loopback',
     },
     authOptions: {
