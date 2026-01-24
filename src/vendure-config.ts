@@ -24,7 +24,6 @@ const IS_DEV = process.env.APP_ENV === 'dev';
 export const config: VendureConfig = {
     //   logger: new DefaultLogger({ level: LogLevel.Debug }),
     apiOptions: {
-        host: process.env.HOST || 'localhost',
         port: process.env.PORT ? +process.env.PORT : 8889,
     //    trustProxy: 'loopback',
     },
@@ -72,7 +71,7 @@ export const config: VendureConfig = {
         AssetServerPlugin.init({
             route: "assets",
             assetUploadDir: path.join(__dirname, "../static/assets"),
-            assetUrlPrefix: `${VENDURE_BASE_URL}/assets/` || undefined,
+            assetUrlPrefix: `${VENDURE_BASE_URL}/assets/`,
         }),
         DefaultSchedulerPlugin.init({}),
       BullMQJobQueuePlugin.init({
