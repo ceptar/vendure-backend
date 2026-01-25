@@ -14,7 +14,7 @@ import { DashboardPlugin } from '@vendure/dashboard/plugin';
 import { GraphiqlPlugin } from '@vendure/graphiql-plugin';
 import 'dotenv/config';
 import path from 'path';
-import { CmsPlugin } from './plugins/cms/cms.plugin';
+// import { CmsPlugin } from './plugins/cms/cms.plugin';
 
 const VENDURE_BASE_URL = process.env.VENDURE_BASE_URL || "http://localhost:8889";
 
@@ -105,12 +105,12 @@ export const config: VendureConfig = {
                 changeEmailAddressUrl: 'http://localhost:8080/verify-email-address-change'
             },
         }),
-            CmsPlugin.init({
-      sanityApiKey: process.env.SANITY_API_KEY,
-      sanityProjectId: process.env.SANITY_PROJECT_ID,
-      sanityDataset: process.env.SANITY_DATASET || 'production',
-      sanityOrigin: process.env.SANITY_ORIGIN,
-    }),
+    //         CmsPlugin.init({
+    //   sanityApiKey: process.env.SANITY_API_KEY,
+    //   sanityProjectId: process.env.SANITY_PROJECT_ID,
+    //   sanityDataset: process.env.SANITY_DATASET || 'production',
+    //   sanityOrigin: process.env.SANITY_ORIGIN,
+    // }),
         DashboardPlugin.init({
             route: 'dashboard',
             appDir: IS_DEV
