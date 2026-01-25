@@ -9,7 +9,8 @@ export default defineConfig({
         outDir: join(__dirname, 'dist/dashboard'),
     },
     server: { 
-        host: '0.0.0.0', 
+        host: true, // This should bind to 0.0.0.0
+        strictPort: true,
     },
     plugins: [
         vendureDashboardPlugin({
