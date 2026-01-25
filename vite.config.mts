@@ -9,7 +9,7 @@ export default defineConfig({
         outDir: join(__dirname, 'dist/dashboard'),
     },
     server: { 
-        host: true, // This should bind to 0.0.0.0
+        host: '0.0.0.0', // This should bind to 0.0.0.0
         strictPort: true,
     },
     plugins: [
@@ -20,7 +20,7 @@ export default defineConfig({
             // and custom fields that are configured.
             vendureConfigPath: pathToFileURL('./src/vendure-config.ts'),
             // Points to the location of your Vendure server.
-            api: { host: 'http://host.docker.internal', port: 8889 },
+            api: { host: 'http://localhost', port: 8889 },
             // When you start the Vite server, your Admin API schema will
             // be introspected and the types will be generated in this location.
             // These types can be used in your dashboard extensions to provide
