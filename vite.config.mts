@@ -8,6 +8,9 @@ export default defineConfig({
     build: {
         outDir: join(__dirname, 'dist/dashboard'),
     },
+    server: { 
+        host: '0.0.0.0', 
+    },
     plugins: [
         vendureDashboardPlugin({
             // The vendureDashboardPlugin will scan your configuration in order
