@@ -10,7 +10,9 @@ export default defineConfig({
     },
     server: { 
         host: '0.0.0.0', // This should bind to 0.0.0.0
+        port: 5173,
         strictPort: true,
+        allowedHosts: ["localhost", "127.0.0.1", "80.109.100.51"]
     },
     plugins: [
         vendureDashboardPlugin({
