@@ -16,7 +16,7 @@ import 'dotenv/config';
 import path from 'path';
 // import { CmsPlugin } from './plugins/cms/cms.plugin';
 
-const VENDURE_BASE_URL = process.env.VENDURE_BASE_URL || "http://localhost:8889";
+// const VENDURE_BASE_URL = process.env.VENDURE_BASE_URL || "http://localhost:8889";
 
 const IS_DEV = process.env.APP_ENV === 'dev';
 // const serverPort = +process.env.PORT || 8000;
@@ -26,14 +26,15 @@ export const config: VendureConfig = {
     apiOptions: {
         port: process.env.PORT ? +process.env.PORT : 8889,
         hostname: '0.0.0.0',
-            cors: {
-      origin: '*',
-      methods: ['GET', 'POST', 'OPTIONS'],
-      allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept'],
-    },
+    //         cors: {
+    //   origin: '*',
+    //   methods: ['GET', 'POST', 'OPTIONS'],
+    //   allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept'],
+    // },
     //    trustProxy: 'loopback',
     },
     authOptions: {
+        disableAuth: true,
         tokenMethod: ['bearer', 'cookie'],
                 requireVerification: true,
 
@@ -77,7 +78,7 @@ export const config: VendureConfig = {
         AssetServerPlugin.init({
             route: "assets",
             assetUploadDir: path.join(__dirname, "../static/assets"),
-            assetUrlPrefix: `${VENDURE_BASE_URL}/assets/`,
+            // assetUrlPrefix: `${VENDURE_BASE_URL}/assets/`,
         }),
         DefaultSchedulerPlugin.init({}),
       BullMQJobQueuePlugin.init({
