@@ -10,6 +10,8 @@ declare global {
             COOKIE_SECRET: string;
             SUPERADMIN_USERNAME: string;
             SUPERADMIN_PASSWORD: string;
-        }
+            MINIO_ACCESS_KEY_ID: string;
+            MINIO_SECRET_ACCESS_KEY: string;
+            MINIO_ENDPOINT: string;       }
     }
 }
