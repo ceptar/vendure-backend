@@ -8,7 +8,8 @@ import {
     // LogLevel,
 } from '@vendure/core';
 import { defaultEmailHandlers, EmailPlugin, FileBasedTemplateLoader } from '@vendure/email-plugin';
-import { AssetServerPlugin } from '@vendure/asset-server-plugin';
+import { AssetServerPlugin, configureS3AssetStorage } from '@vendure/asset-server-plugin';
+import { DefaultAssetNamingStrategy } from '@vendure/core';
 import { BullMQJobQueuePlugin } from "@vendure/job-queue-plugin/package/bullmq";
 import { DashboardPlugin } from '@vendure/dashboard/plugin';
 import { GraphiqlPlugin } from '@vendure/graphiql-plugin';
@@ -27,7 +28,7 @@ export const config: VendureConfig = {
         port: process.env.PORT ? +process.env.PORT : 8889,
         hostname: '0.0.0.0',
     //         cors: {
-    //   origin: '*',
+    //   origin: '',
     //   methods: ['GET', 'POST', 'OPTIONS'],
     //   allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept'],
     // },
@@ -52,7 +53,7 @@ export const config: VendureConfig = {
             type: 'postgres',
             url: process.env.DATABASE_URL,
             synchronize: true,
-            migrations: [path.join(__dirname, './migrations/*.+(js|ts)')],
+            migrations: [path.join(__dirname, './migrations/.+(js|ts)')],
             logging: false,
             // ssl: {
             //     rejectUnauthorized: false,
@@ -63,7 +64,7 @@ export const config: VendureConfig = {
         //     // See the README.md "Migrations" section for an explanation of
         //     // the `synchronize` and `migrations` options.
         //     synchronize: true,
-        //     migrations: [path.join(__dirname, './migrations/*.+(js|ts)')],
+        //     migrations: [path.join(__dirname, './migrations/.+(js|ts)')],
         //     logging: true,
         //     database: path.join(__dirname, '../vendure.sqlite'),
         // },
@@ -75,13 +76,33 @@ export const config: VendureConfig = {
     customFields: {},
     plugins: [
         GraphiqlPlugin.init(),
+//        AssetServerPlugin.init({
+//           route: "assets",
+//           assetUploadDir: path.join(__dirname, "../static/assets"),
+          // assetUrlPrefix: `${VENDURE_BASE_URL}/assets/`,
+//      }),
         AssetServerPlugin.init({
-            route: "assets",
-            assetUploadDir: path.join(__dirname, "../static/assets"),
-            // assetUrlPrefix: `${VENDURE_BASE_URL}/assets/`,
-        }),
+            route: 'assets',
+            assetUploadDir: path.join(__dirname, '../static/assets'),
+            namingStrategy: new DefaultAssetNamingStrategy(),
+            storageStrategyFactory: configureS3AssetStorage({
+            bucket: 'medusa',
+            credentials: {
+            accessKeyId: process.env.MINIO_ACCESS_KEY_ID,
+            secretAccessKey: process.env.MINIO_SECRET_ACCESS_KEY,
+        },
+        nativeS3Configuration: {
+            endpoint: process.env.MINIO_ENDPOINT ?? 'http://localhost:9090',
+            forcePathStyle: true,
+            signatureVersion: 'v4',
+          // The `region` is required by the AWS SDK even when using MinIO,
+          // so we just use a dummy value here.
+            region: 'eu-west-1',
+        },
+      }),
+  }),
         DefaultSchedulerPlugin.init({}),
-      BullMQJobQueuePlugin.init({
+        BullMQJobQueuePlugin.init({
         connection: {
           host: process.env.REDIS_HOST || "localhost",
           port: +(process.env.REDIS_PORT || 6379),
