@@ -10,7 +10,9 @@ import path from 'path';
  * function using data from the @vendure/create package.
  */
 export async function populateOnFirstRun(config: VendureConfig) {
-
+    const dbTablesAlreadyExist = await tablesExist(config);
+    if (!dbTablesAlreadyExist) {
+        console.log(`No Vendure tables found in DB. Populating database...`);
         return populate(
             () => bootstrap({
                 ...config,
@@ -24,6 +26,24 @@ export async function populateOnFirstRun(config: VendureConfig) {
             }),
             require('@vendure/create/assets/initial-data.json'),
             require.resolve('@vendure/create/assets/products.csv')
-        );
-    } 
- 
+        ).then(app => app.close())
+    } else {
+        return;
+    }
+}
+
+async function tablesExist(config: VendureConfig) {
+    const connection = await createConnection(config.dbConnectionOptions);
+    const result = await connection.query(`
+        select n.nspname as table_schema,
+               c.relname as table_name,
+               c.reltuples as rows
+        from pg_class c
+        join pg_namespace n on n.oid = c.relnamespace
+        where c.relkind = 'r'
+              and n.nspname = '${process.env.DB_SCHEMA}'
+        order by c.reltuples desc;`
+    );
+    await connection.close();
+    return 0 < result.length;
+}
