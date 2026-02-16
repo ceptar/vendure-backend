@@ -9,8 +9,8 @@
 ##  docker exec -it vendure-postgres dropdb -U vendure vendure
 ##  docker exec -it vendure-postgres createdb -U vendure vendure
 
-##  docker exec -it postgresql-database-tw8scc8g4ok0g4400wgwc4c8 dropdb -U vendure vendure
-##  docker exec -it postgresql-database-tw8scc8g4ok0g4400wgwc4c8 createdb -U vendure vendure
+##  docker exec -it f5f1dcf6abf4b5feda88b9d5378b78d5f5c734f71f9a9217670d603d40955f7d dropdb -U postgres postgres
+##  docker exec -it f5f1dcf6abf4b5feda88b9d5378b78d5f5c734f71f9a9217670d603d40955f7d createdb -U postgres postgres
 
 
 #  redis

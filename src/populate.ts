@@ -41,7 +41,7 @@ async function tablesExist(config: VendureConfig) {
         from pg_class c
         join pg_namespace n on n.oid = c.relnamespace
         where c.relkind = 'r'
-              and n.nspname = '${process.env.DB_SCHEMA}'
+              and n.nspname = 'public'
         order by c.reltuples desc;`
     );
     await connection.close();
